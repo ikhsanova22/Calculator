@@ -1,0 +1,133 @@
+package com.example.calculator;
+
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+
+public class MainActivity extends AppCompatActivity {
+    TextView display;
+    double first_operand = 0;
+    double second_operand = 0;
+    double result = 0;
+    boolean equal = false;
+    String operation = "";
+    String current_text = "";
+
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        display = (TextView)findViewById(R.id.textView);
+
+    }
+
+    public void digitPressed(View v){
+        Button target = (Button)v;
+        current_text = display.getText().toString();
+        if (current_text.equals("0")){
+            current_text = "";
+        }
+        String text = current_text + target.getText().toString();
+
+        display.setText(text);
+    }
+
+    public void operationPressed(View v){
+        try{
+            Button operation_button = (Button)v;
+            first_operand = Double.parseDouble(display.getText().toString());
+            operation = operation_button.getText().toString();
+            display.setText("");
+
+            if (display.getText().equals("")){
+                operation = operation_button.getText().toString();
+            }else {
+                if (equal == true & operation!=""){
+                    operation = operation_button.getText().toString();
+                    first_operand = Double.parseDouble(display.getText().toString());
+                    display.setText("");
+                }
+                if (first_operand != 0 & operation!=""){
+                    second_operand = Double.parseDouble(display.getText().toString());
+                    first_operand = equal();
+                    second_operand = 0;
+                    operation = operation_button.getText().toString();
+                    display.setText("");
+                }else{
+                    first_operand = Double.parseDouble(display.getText().toString());
+                    operation = operation_button.getText().toString();
+                    display.setText("");
+                }
+            }
+
+            if (operation.equals("√")){
+                result = Math.sqrt(first_operand);
+                display.setText(""+result);
+            }else if (operation.equals("+/-")){
+                display.setText(""+(0-first_operand));
+            }else if (operation.equals("1/x")){
+                display.setText(String.valueOf(1/first_operand));
+            }
+
+        }catch (Exception ex){
+            Toast.makeText(getApplicationContext(), "False", Toast.LENGTH_SHORT).show();
+        }
+    }
+    public void dotPressed(View v){
+        try{
+            String text = "";
+            current_text = display.getText().toString();
+            if (!current_text.contains(".")){
+                text = current_text + ".";
+            }else {
+                text = current_text;
+            }
+            if (current_text.equals("")){
+                text = "0.";
+            }
+            display.setText(text);
+        }catch (Exception ex){
+            Toast.makeText(getApplicationContext(), "False", Toast.LENGTH_SHORT).show();
+        }
+    }
+    public void delete(View v){
+        display.setText("0");
+    }
+
+    public void equalsPressed(View v) {
+        try{
+//            second_operand = Double.parseDouble(display.getText().toString());
+
+//            if (operation.equals("+")) {
+//                result = first_operand + second_operand;
+//            } else if (operation.equals("-")) {
+//                result = first_operand - second_operand;
+//            } else if (operation.equals("×")) {
+//                result = first_operand * second_operand;
+//            } else if (operation.equals("÷")) {
+//                result = first_operand / second_operand;
+//            }
+            equal = true;
+            display.setText(""+result);
+        }catch(Exception ex){
+            Toast.makeText(getApplicationContext(), "False", Toast.LENGTH_SHORT).show();
+        }
+    }
+    public double equal(){
+
+
+
+        if (operation.equals("+")) {
+            result = first_operand + second_operand;
+        } else if (operation.equals("-")) {
+            result = first_operand - second_operand;
+        } else if (operation.equals("×")) {
+            result = first_operand * second_operand;
+        } else if (operation.equals("÷")) {
+            result = first_operand / second_operand;
+        }
+        return result;
+    }
+}
